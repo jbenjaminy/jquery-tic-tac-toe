@@ -3,7 +3,8 @@ $(document).ready(function(){
 	var playerOne = "Player 1";
 	var playerTwo = "Player 2";
 	var currentTurn = playerOne;
-	var turnNumber = 0
+	var turnNumber = 0;
+	var checkMark = '';
 
 	//DISPLAY GAMESTART STATUS (PLAYER 1'S TURN)
 	displayStatus();
@@ -27,9 +28,29 @@ $(document).ready(function(){
 		// UPDATE STATUS
 		displayStatus();
 
+
 		for (var i = 1; i <= 3; i++) {
-			$('#row1')
-				// if we find x set counter, if xcounter = 3, win
+			checkMark = $('#1-' + i).text();
+			if (checkMark === 'X') {
+				if ($('#2-' + i).text() === checkMark) {
+					if ($('#3-' + i).text() === checkMark) {
+						$('.status').text("Player 1 Wins!");
+						gameOver();
+					}
+				}
+			}
+		}
+
+		for (var j = 1; j <= 3; j++) {
+			checkMark = $('#1-' + j).text();
+			if (checkMark === 'O') {
+				if ($('#2-' + j).text() === checkMark) {
+					if ($('#3-' + j).text() === checkMark) {
+						$('.status').text("Player 2 Wins!");
+						gameOver();
+					}
+				}
+			}
 		}
 
 
@@ -50,6 +71,7 @@ $(document).ready(function(){
 		$('.square').text('');
 		currentTurn = playerOne;
 		turnNumber = 0;
+		checkMark = '';
 		$('#start-new').hide();
 		displayStatus();
 
