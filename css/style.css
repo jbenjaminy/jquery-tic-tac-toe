@@ -1,0 +1,50 @@
+body {
+	text-align: center;
+	margin-top: 50px;
+}
+
+#board {
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 325px;
+	margin-top: 50px;
+}
+
+.square {
+    width:100px;
+    height:100px;
+    text-align: center;
+    font-weight: bolder;
+    font-size: 85px;
+    vertical-align: bottom;
+}
+
+.mid-row {
+	border-top: black solid 5px;
+	border-bottom: black solid 5px;
+}
+
+.mid-col {
+	border-left: black solid 5px;
+	border-right: black solid 5px;
+}
+
+.strategy {
+	margin-top: 50px;
+}
+
+.status {
+	margin-top: 50px;
+}
+
+.buttons {
+	margin-top: 30px;
+}
+
+#start-new {
+	display: none;
+}
+
+
+
+
