@@ -1,26 +1,43 @@
 $(document).ready(function(){
-	// DECLARE VARIABLES FOR PLAYER 1, 2, CURRENT TURN
-	var playerOne = "Player 1";
-	var playerTwo = "Player 2";
+'use strict';
+	/* ---------- VARIABLES ----------*/
+	var playerOne = "X";
+	var playerTwo = "O";
 	var currentTurn = playerOne;
-	var turnNumber = 0;
-	var checkMark = '';
+	var turnNumber = 0;  // TURN-COUNTER
+	var checkMark = '';  // STATUS OF EACH BOX
 
-	//DISPLAY GAMESTART STATUS (PLAYER 1'S TURN)
-	displayStatus();
+	/* ---------- FUNCTIONS ----------*/
+	function displayStatus() {  // DISPLAYS STATUS
+		$('.status').text(currentTurn + "'s" + " turn");
+	}
+
+	function checkDiagonalRight (player) {  // CHECK WINNING CONDITION DIAGONALLY (FROM RIGHT)
+		return $('#3-1').text() === player && $('#2-2').text() === player && $('#1-3').text() === player;
+	}
+
+	function checkDiagonalLeft (player) {  // CHECK WINNING CONDITION DIAGONALLY (FROM LEFT)
+		return $('#1-1').text() === player && $('#2-2').text() === player && $('#3-3').text() === player;
+	}
+
+	function showNewGame () {  // SHOW NEW GAME BUTTON
+		$('#start-new').show();
+	}
+
+	/* ---------- CODE-BODY ----------*/
+	displayStatus();  //DISPLAY GAMESTART STATUS (PLAYER 1'S TURN)
 	
 	$('.square').click(function(){
 		// STOP USER FROM OVERRIDING OCCUPIED CELL
 		if ($(this).text() !== '') {
 			return;
 		} 
-		// PLACES X FOR 1, O FOR 2, THEN SWITCHES TURN
+		// PLACES MARK ( X OR O ) THEN SWITCHES TURN
 		if (currentTurn === playerOne) {
 			$(this).text('X');
 			currentTurn = playerTwo;
 			turnNumber++;
-		} 
-		else {
+		} else {
 			$(this).text('O');
 			currentTurn = playerOne;
 			turnNumber++;
@@ -28,44 +45,59 @@ $(document).ready(function(){
 		// UPDATE STATUS
 		displayStatus();
 
-
+		// WIN CONDITION FOR VERTICAL SETS
 		for (var i = 1; i <= 3; i++) {
 			checkMark = $('#1-' + i).text();
-			if (checkMark === 'X') {
-				if ($('#2-' + i).text() === checkMark) {
+			if (checkMark !== '') {
+				if (checkDiagonalRight(checkMark)) {
+					$('.status').text(checkMark + ' Wins');
+					showNewGame();
+					break;  // FOR BUG-FIX (DRAW OVERRIDING LAST-TURN WIN)
+				} else if (checkDiagonalLeft(checkMark)) {
+					$('.status').text(checkMark + ' Wins');
+					showNewGame();
+					break;
+				} else if ($('#2-' + i).text() === checkMark) {
 					if ($('#3-' + i).text() === checkMark) {
-						$('.status').text("Player 1 Wins!");
-						gameOver();
+						$('.status').text(checkMark + ' Wins');
+						showNewGame();
+						break;
 					}
+				} else if (turnNumber === 9) {
+					$('.status').text("Draw!");
+					showNewGame();
+					break;
 				}
 			}
 		}
 
+		// WIN CONDITION FOR HORIZONTAL SETS
 		for (var j = 1; j <= 3; j++) {
-			checkMark = $('#1-' + j).text();
-			if (checkMark === 'O') {
-				if ($('#2-' + j).text() === checkMark) {
-					if ($('#3-' + j).text() === checkMark) {
-						$('.status').text("Player 2 Wins!");
-						gameOver();
+			checkMark = $('#' + j + '-1').text();
+			if (checkMark !== '') {
+				if (checkDiagonalRight(checkMark)) {
+					$('.status').text(checkMark + ' Wins');
+					showNewGame();
+					break;
+				} else if (checkDiagonalLeft(checkMark)) {
+					$('.status').text(checkMark + ' Wins');
+					showNewGame();
+					break;
+				} else if ($('#' + j + '-2').text() === checkMark) {
+					if ($('#' + j + '-3').text() === checkMark) {
+						$('.status').text(checkMark + ' Wins');
+						showNewGame();
+						break;
 					}
+				} else if (turnNumber === 9) {
+					$('.status').text("Draw!");
+					showNewGame();
+					break;
 				}
 			}
 		}
-
-
-		// CHECKS IF GAME ENDS IN DRAWS
-		if (turnNumber === 9) {
-			$('.status').text("Draw!");
-			gameOver();
-		} 
 	});
 	
-	// FUNCTION: DISPLAY PLAY AGAIN BUTTON AT THE END
-	function gameOver () {
-		$('#start-new').show();
-	}
-
 	// NEW GAME CLEARS BOARD, RESET TURN AND STATUS
 	$('#start-new').click(function() {
 		$('.square').text('');
@@ -76,10 +108,4 @@ $(document).ready(function(){
 		displayStatus();
 
 	});
-
-	// FUNCTION: DISPLAYS CURRENT PLAYER STATUS
-	function displayStatus() {
-		$('.status').text(currentTurn + "'s" + " turn");
-
-	}
 });
